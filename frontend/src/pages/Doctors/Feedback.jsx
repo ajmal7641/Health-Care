@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import avatar from '../../assets/images/avatar-icon.png'
-import { formateDate } from '../../utils/formateDstes'
+import { formateDate } from '../../../utils/formateDstes'
 import { AiFillStar } from "react-icons/ai";
 import FeedbackForm from './FeedbackForm';
 
@@ -34,10 +34,11 @@ const Feedback = () => {
             </p>
           </div>
         </div>
+
         <div className='flex gap-1'>
-          {[ ...Array(5).keys()].map((_,index)=>{
+          {[ ...Array(5).keys()].map((_,index)=>(
             <AiFillStar key={index} color='#0067FF' />
-          })}
+          ))}
             
         </div>
       </div>

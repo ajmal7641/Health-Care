@@ -4,7 +4,9 @@ import jwt from "jsonwebtoken"
 import bcrypt from 'bcryptjs'
 
 const generateToken = user =>{
-      return jwt.sign({id:user._id, role:user.role}, process.env.JWT_SECRET_key, {
+      return jwt.sign({id:user._id, role:user.role},
+             process.env.JWT_SECRET_KEY,
+      {
             expiresIn : "15d", 
       })
 }
@@ -22,7 +24,7 @@ export const register = async (req, res ) => {
                   user = await User.findOne({email})
             }
             else if(role==='doctor'){
-                  user = Doctor.findOne({email})
+                  user = await Doctor.findOne({email})
 
             }
 
@@ -70,9 +72,8 @@ export const register = async (req, res ) => {
 
 export const login = async (req, res ) => {
 
-      const {email , password} =  req.res 
+      const {email } =  req.body; 
 
-      
 
       try {
 
@@ -80,10 +81,10 @@ export const login = async (req, res ) => {
             const patient = await  User.findOne({email})
             const doctor  = await  Doctor.findOne({email})
 
-            if((patient)) {
+            if(patient) {
                   user = patient 
             }
-            if((doctor)) {
+            if(doctor) {
                   user = doctor 
             }
 
@@ -93,29 +94,26 @@ export const login = async (req, res ) => {
       }
       
 
-      const isPasswordMatch = await bcrypt.compare (password , user.password)
+      const isPasswordMatch = await bcrypt.compare(
+            req.body.password,
+            user.password
+      );
 
       if (!isPasswordMatch){
-            return res
-            .status(404)
-            .json({status : false ,message: 'invalid credentials'})
+            return res.status(400).json({status : false ,message: 'invalid credentials'})
       }
 
       // get toke
 
       const token = generateToken(user)
 
-      const {password , role , appointments , ...rest} =  user._doc
+      const {password , role , appointments , ...rest} =  user._doc;
 
-      res
-            .status(200)
-            .json({status : true ,message: 'Successfully login', token , data : {...rest}, role})
+      res.status(200).json({status : true ,message: 'Successfully login', token , data : {...rest}, role})
 
             
       } catch (err){    
-            res
-            .status(500)
-            .json({status : false ,message: 'failed to login'})
+            res.status(500).json({status : false ,message: 'failed to login'})
             
       }
 }

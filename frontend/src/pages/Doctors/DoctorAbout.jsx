@@ -1,4 +1,4 @@
-import { formateDate } from '../../../utils/formateDstes'
+import { formateDate } from '../../utils/formateDstes'
 
 const DoctorAbout = () => {
   return (

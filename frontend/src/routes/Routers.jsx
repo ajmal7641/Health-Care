@@ -1,7 +1,3 @@
-
-
-
-
 import Home from '../pages/Home'
 import Contact from '../pages/Contact'
 import Doctors from '../pages/Doctors/Doctors'
@@ -32,4 +28,3 @@ const Routers = () => {
 }
 
 export default Routers
-

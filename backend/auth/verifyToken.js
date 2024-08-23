@@ -3,41 +3,73 @@ import Doctor from '../models/DoctorSchema.js'
 import User from '../models/UserSchema.js'
 
 
+// export const authenticate = async (req, res, next) => {
+//      const authToken = req.headers.authorization;
+ 
+//      if (!authToken || !authToken.startsWith("Bearer")) {
+//          return res
+//              .status(401)
+//              .json({ success: false, message: "No token, authorization denied" });
+//      }
+ 
+//      try {
+//          const token = authToken.split(" ")[1];
+//          const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+ 
+//          console.log("Decoded token:", decoded); // Log decoded token
+ 
+//          // Check if the decoded token contains the user ID
+//          if (!decoded.id) {
+//              return res
+//                  .status(401)
+//                  .json({ success: false, message: "Invalid token structure" });
+//          }
+ 
+//          req.userId = decoded.id; // Assuming the token contains the user ID in `decoded.id`
+//          console.log("Set userId to req:", req.userId); // Log userId set to req
+ 
+//          next();
+//      } catch (err) {
+//          if (err.name === "TokenExpiredError") {
+//              return res.status(401).json({ message: "Token is expired" });
+//          }
+//          return res.status(401).json({ success: false, message: "Invalid token" });
+//      }
+//  };
+
 export const authenticate = async (req, res, next) => {
-     const authToken = req.headers.authorization;
- 
-     if (!authToken || !authToken.startsWith("Bearer")) {
-         return res
-             .status(401)
-             .json({ success: false, message: "No token, authorization denied" });
-     }
- 
-     try {
-         const token = authToken.split(" ")[1];
-         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
- 
-         console.log("Decoded token:", decoded); // Log decoded token
- 
-         // Check if the decoded token contains the user ID
-         if (!decoded.id) {
-             return res
-                 .status(401)
-                 .json({ success: false, message: "Invalid token structure" });
-         }
- 
-         req.userId = decoded.id; // Assuming the token contains the user ID in `decoded.id`
-         console.log("Set userId to req:", req.userId); // Log userId set to req
- 
-         next();
-     } catch (err) {
-         if (err.name === "TokenExpiredError") {
-             return res.status(401).json({ message: "Token is expired" });
-         }
-         return res.status(401).json({ success: false, message: "Invalid token" });
-     }
- };
-
-
+    const authToken = req.headers.authorization;
+  
+    if (!authToken || !authToken.startsWith("Bearer")) {
+      return res
+        .status(401)
+        .json({ success: false, message: "No token, authorization denied" });
+    }
+  
+    try {
+      const token = authToken.split(" ")[1]; // Extract the token from the Bearer scheme
+      const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+  
+      console.log("Decoded token:", decoded); // Log decoded token for debugging
+  
+      // Ensure the decoded token contains the user ID
+      if (!decoded.id) {
+        return res
+          .status(401)
+          .json({ success: false, message: "Invalid token structure" });
+      }
+  
+      req.userId = decoded.id; // Attach the user ID to the request object
+      console.log("Set userId to req:", req.userId); // Log the user ID for debugging
+  
+      next(); // Proceed to the next middleware or route handler
+    } catch (err) {
+      if (err.name === "TokenExpiredError") {
+        return res.status(401).json({ message: "Token is expired" });
+      }
+      return res.status(401).json({ success: false, message: "Invalid token" });
+    }
+  };
 
 
  export const restrict = roles => async (req, res, next) => {

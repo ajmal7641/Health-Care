@@ -85,6 +85,7 @@ const Signup = () => {
               Create an <span className='text-primaryColor text-[22px] leading-9 font-bold  mb-10'>
                 account</span>
             </h3>
+
             <form onSubmit={submitHandler}>
 
               <div className="mb-5">
@@ -195,6 +196,7 @@ const Signup = () => {
         </p>
 
             </form>
+            
           </div>
         </div>
       </div>
